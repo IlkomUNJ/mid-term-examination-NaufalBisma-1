@@ -2,6 +2,7 @@
 #define CUSTOMMATRIX_H
 
 #include <iostream>
+#include <cstring> // Diperlukan untuk membandingkan array, tapi lebih baik pakai operator==
 
 using namespace std;
 
@@ -12,25 +13,34 @@ public:
 
     }
 
-    //alternate way to instantiate the class
-    CustomMatrix(bool m[3][3]){
-        const int m_size = sizeof(m) / sizeof(m[0]);
-        for (int i=0;i< m_size;i++) {
-            for(int j=0; j < sizeof(m[0]);j++){
-                //cout << i << " " << j << endl;
+    // Perbaikan: Menggunakan batas 3x3 yang pasti, karena array C-style akan 'decay' saat dilewatkan
+    CustomMatrix(const bool m[3][3]){
+        for (int i=0;i< 3;i++) {
+            for(int j=0; j < 3;j++){
                 mat[i][j] = m[i][j];
             }
         }
     }
 
-    void fillMatrix(bool m[3][3]){
-        const int m_size = sizeof(m) / sizeof(m[0]);
-        for (int i=0;i< m_size;i++) {
-            for(int j=0; j < sizeof(m[0]);j++){
-                //cout << i << " " << j << endl;
+    // Perbaikan: Menggunakan batas 3x3 yang pasti
+    void fillMatrix(const bool m[3][3]){
+        for (int i=0;i< 3;i++) {
+            for(int j=0; j < 3;j++){
                 mat[i][j] = m[i][j];
             }
         }
+    }
+
+    // NEW: Operator perbandingan untuk mendeteksi kecocokan pola
+    bool operator==(const CustomMatrix& other) const {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                if (mat[i][j] != other.mat[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 };
 
